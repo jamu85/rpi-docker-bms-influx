@@ -7,6 +7,7 @@ import json
 import sys
 import time
 import os
+import socket
 
 from time import gmtime, strftime
 
@@ -31,9 +32,8 @@ manager = gatt.DeviceManager(adapter_name='hci0')
 # --------------------------------------------------------------------------------
 # BMS BLE Reader Thread
 class AnyDevice(gatt.Device):
-    def  __init__(self, c, **kwargs):
+    def  __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.c=c
 
     def connect_succeeded(self):
         super().connect_succeeded()
@@ -56,13 +56,13 @@ class AnyDevice(gatt.Device):
             s for s in self.services
             if s.uuid == '0000ff00-0000-1000-8000-00805f9b34fb')
 
-        self.bms_read_characteristic = next(
-            c for c in device_information_service.characteristics
-            if c.uuid == '0000ff01-0000-1000-8000-00805f9b34fb')
+        #self.bms_read_characteristic = next(
+           # c for c in device_information_service.characteristics
+           # if c.uuid == '0000ff01-0000-1000-8000-00805f9b34fb')
 
-        self.bms_write_characteristic = next(
-            c for c in device_information_service.characteristics
-            if c.uuid == '0000ff02-0000-1000-8000-00805f9b34fb')
+        #self.bms_write_characteristic = next(
+           # c for c in device_information_service.characteristics
+           # if c.uuid == '0000ff02-0000-1000-8000-00805f9b34fb')
 
         print("BMS found")
         self.bms_read_characteristic.enable_notifications()
@@ -158,11 +158,11 @@ class AnyDevice(gatt.Device):
 if __name__ == '__main__':
   try:
       print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-      device = AnyDevice(mac_address=sys.argv[1], manager=manager, c=c)
+      device = AnyDevice(mac_address=sys.argv[1], manager=manager)
       device.connect()
       manager.run()
       time.sleep(int(update_interval))
 
   except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print("\nKilling Thread...")
-  print("Done.\nExiting.")
+    print("Done.\nExiting.")

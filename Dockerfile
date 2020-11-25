@@ -1,22 +1,31 @@
-FROM balenalib/raspberrypi4-64-python:latest
+FROM python:3.8
 
-ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
-ENV UDEV=1
-
-RUN install_packages \
-  build-essential \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  bluez-tools \
   bluez \
-  python3-dbus \
+  bluetooth \
+  build-essential \
+  libdbus-glib-1-dev \
+  libgirepository1.0-dev \
+  pkg-config \
+  libcairo2-dev \
   python3-dev \
-  libglib2.0-dev \
-  htop
+  libgirepository1.0-dev \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install influxdb_client gatt --no-cache-dir
+RUN pip3 install \
+  gatt \
+  influxdb_client \
+  dbus-python \
+  gobject \
+  PyGObject
 
-CMD sleep 3600
 
 COPY influx-script/influx-connector.py /opt/influx-connector.py
 RUN ["chmod", "a+x", "/opt/influx-connector.py"]
 
+COPY docker_entrypoint.sh /opt/docker_entrypoint.sh
+RUN ["chmod", "a+x", "/opt/docker_entrypoint.sh"]
+
 #ENTRYPOINT ["python", "/opt/influx-connector.py"]
-ENTRYPOINT [ "htop" ]
+ENTRYPOINT [ "/opt/docker_entrypoint.sh" ]
