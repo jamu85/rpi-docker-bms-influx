@@ -6,12 +6,12 @@ ENV UDEV=1
 RUN install_packages \
   build-essential \
   bluez \
-  python-dbus \
-  python-dev \
+  python3-dbus \
+  python3-dev \
   libglib2.0-dev \
   htop
 
-RUN pip install influxdb gatt --no-cache-dir
+RUN pip install influxdb_client gatt --no-cache-dir
 
 CMD sleep 3600
 

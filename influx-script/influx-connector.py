@@ -1,5 +1,7 @@
-#!/usr/bin/python
-from influxdb import InfluxDBClient
+#!/usr/bin/env python
+#coding: utf8
+
+from influxdb_client import InfluxDBClient
 import gatt
 import json
 import sys
