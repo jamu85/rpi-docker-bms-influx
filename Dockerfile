@@ -1,10 +1,10 @@
 FROM alpine:latest
 
-RUN apk add --update --no-cache htop
+RUN apk add --update --no-cache htop bluez
 RUN apk add --update --no-cache python3 py3-pip && ln -sf python3 /usr/bin/python
 
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir influxdb
+    pip install --no-cache-dir influxdb gatt
 
 EXPOSE 2947
 
