@@ -1,12 +1,19 @@
-FROM alpine:latest
+FROM balenalib/raspberrypi4-64-python:latest
 
-RUN apk add --update --no-cache htop bluez py3-dbus
-RUN apk add --update --no-cache python3 py3-pip && ln -sf python3 /usr/bin/python
+ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+ENV UDEV=1
 
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir influxdb gatt
+RUN install_packages \
+  build-essential \
+  bluez \
+  python-dbus \
+  python-dev \
+  libglib2.0-dev \
+  htop
 
-EXPOSE 2947
+RUN pip install influxdb gatt --no-cache-dir
+
+CMD sleep 3600
 
 COPY influx-script/influx-connector.py /opt/influx-connector.py
 RUN ["chmod", "a+x", "/opt/influx-connector.py"]
