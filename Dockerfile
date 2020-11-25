@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update --no-cache htop bluez
+RUN apk add --update --no-cache htop bluez py3-dbus
 RUN apk add --update --no-cache python3 py3-pip && ln -sf python3 /usr/bin/python
 
 RUN pip install --upgrade pip && \
